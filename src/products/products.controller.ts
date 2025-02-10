@@ -10,13 +10,13 @@ export class ProductsController {
   constructor(private readonly productsService: ProductsService) { }
 
   //@Post()
-  @MessagePattern({ create: 'create_product' })// se puede colocar como un string o un objeto
+  @MessagePattern({ cmd: 'create_product' })// se puede colocar como un string o un objeto
   create(@Payload() createProductDto: CreateProductDto) {
     return this.productsService.create(createProductDto);
   }
 
   //@Get()
-  @MessagePattern({ create: 'get_products' })
+  @MessagePattern({ cmd: 'get_products' })
   findAll(
     @Payload() paginationDto: PaginationDto,
   ) {
@@ -24,20 +24,22 @@ export class ProductsController {
   }
 
   //@Get(':id')
-  @MessagePattern({ create: 'get_product' })
+  @MessagePattern({ cmd: 'get_one_product' })
   findOne(@Payload('id', ParseIntPipe) id: number) {//{id: '1'} => '1', el id es el nombre del parametro
+    console.log('id', id);
     return this.productsService.findOne(id);
   }
 
   //@Patch(':id')
-  @MessagePattern({ create: 'update_product' })
+  @MessagePattern({ cmd: 'update_product' })
   update(@Payload() updateProductDto: UpdateProductDto) {
+    console.log('updateProductDto', updateProductDto);
     const { id, ...rest } = updateProductDto;
     return this.productsService.update(id, { id, ...rest });
   }
 
   //@Delete(':id')
-  @MessagePattern({ create: 'delete_product' })
+  @MessagePattern({ cmd: 'delete_product' })
   remove(@Payload('id', ParseIntPipe) id: number) {
     return this.productsService.remove(id);
   }
