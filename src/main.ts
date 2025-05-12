@@ -4,13 +4,15 @@ import { Logger, ValidationPipe } from '@nestjs/common';
 import { Transport, MicroserviceOptions } from '@nestjs/microservices';
 import { envs } from './config';
 
+
 async function bootstrap() {
   const logger = new Logger('Main');
   const app = await NestFactory.createMicroservice<MicroserviceOptions>(AppModule, {
     //configuracion de la conexion con el microservicio
-    transport: Transport.TCP,
+    transport: Transport.NATS,
     options: {
-      port: envs.port
+      // port: envs.port
+      servers: envs.natsServers
     }
   });
   app.useGlobalPipes(new ValidationPipe(
